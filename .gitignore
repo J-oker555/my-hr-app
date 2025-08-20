@@ -1,14 +1,22 @@
 # Python
 __pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
 .env
-# Django/Build
-staticfiles/
+.venv/
+*.egg-info/
+
+# Django
 media/
+staticfiles/
+
 # IDE
 .vscode/
 .idea/
-# Docker
-*.log
+*.swp
+
+# OS
+.DS_Store
