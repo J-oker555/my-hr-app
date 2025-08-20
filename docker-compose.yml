@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  api:
+    build: .
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+  worker:
+    build: .
+    command: celery -A hrms_backend worker -l INFO
+    env_file: .env
+    depends_on:
+      - api
+      - redis
+  beat:
+    build: .
+    command: celery -A hrms_backend beat -l INFO
+    env_file: .env
+    depends_on:
+      - api
+      - redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"

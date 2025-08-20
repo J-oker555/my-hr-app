@@ -1,0 +1,1 @@
+# Placeholder serializers – à compléter
