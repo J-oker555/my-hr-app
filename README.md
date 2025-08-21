@@ -131,4 +131,4 @@ pytest
 
 👨‍💻 Auteur
 
-Projet développé par Ilyas Maalal,Boussad Ait joudi Oufella, Akram Chouichi, Saddem Lahsen.
+Projet développé par Ilyas Maalal,Boussad Ait Djoudi Oufella, Akram Chouichi, Saddem Lassoued.
