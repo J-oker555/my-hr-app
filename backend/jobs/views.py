@@ -17,6 +17,10 @@ class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects
     serializer_class = JobSerializer
 
+    def get_queryset(self):
+        # Recalcule à chaque requête pour éviter d'éventuels caches
+        return Job.objects.order_by("-created_at")
+
     @action(detail=True, methods=["post"])
     def analyze_applications(self, request, id=None):
         job = self.get_object()

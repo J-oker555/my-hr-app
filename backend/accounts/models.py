@@ -1,5 +1,5 @@
 import datetime as dt
-from mongoengine import Document, StringField, EmailField, DateTimeField, BooleanField
+from mongoengine import Document, StringField, EmailField, DateTimeField, BooleanField, FileField
 from passlib.hash import bcrypt
 
 ROLES = ('admin', 'recruiter', 'candidate')
@@ -13,6 +13,8 @@ class User(Document):
     role = StringField(choices=ROLES, default='candidate')
     is_active = BooleanField(default=True)
     created_at = DateTimeField(default=dt.datetime.utcnow)
+    # CV du candidat (PDF) – optionnel
+    cv_file = FileField()
 
     def set_password(self, raw: str): self.password_hash = bcrypt.hash(raw)
     def check_password(self, raw: str) -> bool: return bcrypt.verify(raw, self.password_hash)

@@ -23,10 +23,13 @@ export function AppLayout() {
             {user && (
               <>
                 <NavLink to="/applications" className={({ isActive }) => isActive ? 'text-primary' : ''}>Candidatures</NavLink>
-                {user.role === 'candidat' && (
-                  <NavLink to="/postes" className={({ isActive }) => isActive ? 'text-primary' : ''}>Postes</NavLink>
+                {user.role === 'candidate' && (
+                  <>
+                    <NavLink to="/postes" className={({ isActive }) => isActive ? 'text-primary' : ''}>Postes</NavLink>
+                    <NavLink to="/profil" className={({ isActive }) => isActive ? 'text-primary' : ''}>Profil</NavLink>
+                  </>
                 )}
-                {(user.role === 'admin' || user.role === 'recruteur') && (
+                {(user.role === 'admin' || user.role === 'recruiter') && (
                   <NavLink to="/jobs" className={({ isActive }) => isActive ? 'text-primary' : ''}>Postes</NavLink>
                 )}
                 {user.role === 'admin' && (

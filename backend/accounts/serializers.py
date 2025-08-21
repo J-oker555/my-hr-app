@@ -23,3 +23,8 @@ class UserCreateSerializer(me_serializers.DocumentSerializer):
         u.set_password(validated['password'])
         u.save()
         return u
+
+class UserProfileSerializer(me_serializers.DocumentSerializer):
+    class Meta:
+        model = User
+        fields = ('id','email','full_name','role','cv_file')
