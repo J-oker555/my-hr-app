@@ -2,22 +2,25 @@ version: '3.9'
 services:
   api:
     build: .
-    env_file: .env
+    working_dir: /app/backend
+    env_file: /app/backend/.env
     ports:
       - "8000:8000"
     depends_on:
       - redis
   worker:
     build: .
+    working_dir: /app/backend
     command: celery -A hrms_backend worker -l INFO
-    env_file: .env
+    env_file: /app/backend/.env
     depends_on:
       - api
       - redis
   beat:
     build: .
+    working_dir: /app/backend
     command: celery -A hrms_backend beat -l INFO
-    env_file: .env
+    env_file: /app/backend/.env
     depends_on:
       - api
       - redis
