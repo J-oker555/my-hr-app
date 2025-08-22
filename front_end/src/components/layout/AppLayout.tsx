@@ -1,61 +1,93 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { useAuthStore } from '../../stores/authStore'
-import { Toaster } from '../ui/Toaster'
+import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../stores/authStore';
 
-export function AppLayout() {
-  const { user, logout } = useAuthStore()
-  const navigate = useNavigate()
+const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, logout } = useAuthStore();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  function handleLogout() {
-    logout()
-    navigate('/login')
-  }
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const navigationItems = [
+    { name: 'Dashboard', href: '/dashboard', icon: '📊', roles: ['admin', 'recruiter', 'candidate'] },
+    { name: 'Utilisateurs', href: '/users', icon: '👥', roles: ['admin'] },
+    { name: 'Postes', href: '/jobs', icon: '💼', roles: ['admin', 'recruiter'] },
+    { name: 'Candidatures', href: '/applications', icon: '📝', roles: ['admin', 'recruiter', 'candidate'] },
+    { name: 'Analytics', href: '/analytics', icon: '📈', roles: ['admin'] },
+    { name: 'Mon Espace Recruteur', href: '/recruiter-dashboard', icon: '🎯', roles: ['recruiter'] },
+  ];
+
+  const filteredNavigationItems = navigationItems.filter(item => 
+    item.roles.includes(user?.role || 'candidate')
+  );
 
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-40 border-b bg-white/70 backdrop-blur dark:bg-gray-900/70">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <Link to="/" className="font-semibold tracking-tight">
-            RH Intelligent
-          </Link>
-          <nav className="flex items-center gap-4 text-sm">
-            <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'text-primary' : ''}>Tableau de bord</NavLink>
-            {user && (
-              <>
-                <NavLink to="/applications" className={({ isActive }) => isActive ? 'text-primary' : ''}>Candidatures</NavLink>
-                {user.role === 'candidate' && (
-                  <>
-                    <NavLink to="/postes" className={({ isActive }) => isActive ? 'text-primary' : ''}>Postes</NavLink>
-                    <NavLink to="/profil" className={({ isActive }) => isActive ? 'text-primary' : ''}>Profil</NavLink>
-                  </>
-                )}
-                {(user.role === 'admin' || user.role === 'recruiter') && (
-                  <NavLink to="/jobs" className={({ isActive }) => isActive ? 'text-primary' : ''}>Postes</NavLink>
-                )}
-                {user.role === 'admin' && (
-                  <NavLink to="/users" className={({ isActive }) => isActive ? 'text-primary' : ''}>Utilisateurs</NavLink>
-                )}
-              </>
-            )}
-          </nav>
-          <div className="flex items-center gap-3 text-sm">
-            {user ? (
-              <>
-                <span className="hidden sm:inline text-gray-600 dark:text-gray-300">{user.name} · {user.role}</span>
-                <button className="btn" onClick={handleLogout}>Déconnexion</button>
-              </>
-            ) : (
-              <Link className="btn" to="/login">Connexion</Link>
-            )}
+    <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
+      <nav className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <h1 className="text-xl font-bold text-gray-900">HR System</h1>
+              </div>
+              <div className="hidden md:ml-6 md:flex md:space-x-8">
+                {filteredNavigationItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                      location.pathname === item.href
+                        ? 'border-blue-500 text-gray-900'
+                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                    }`}
+                  >
+                    <span className="mr-2">{item.icon}</span>
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              {user && (
+                <div className="flex items-center space-x-3">
+                  <span className="text-sm text-gray-700">
+                    Bonjour, {user.name}
+                  </span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    user.role === 'admin' ? 'bg-red-100 text-red-800' :
+                    user.role === 'recruiter' ? 'bg-blue-100 text-blue-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {user.role === 'admin' ? 'Admin' :
+                     user.role === 'recruiter' ? 'Recruteur' : 'Candidat'}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                  >
+                    Déconnexion
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </header>
-      <main className="mx-auto max-w-7xl px-4 py-6">
-        <Outlet />
+      </nav>
+
+      {/* Contenu principal */}
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {children}
       </main>
-      <Toaster />
     </div>
-  )
-}
+  );
+};
+
+export default AppLayout;
 
 

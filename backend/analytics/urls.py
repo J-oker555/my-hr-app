@@ -1,3 +1,7 @@
 from django.urls import path
-from .views import metrics
-urlpatterns = [ path('metrics/', metrics) ]
+from . import views
+
+urlpatterns = [
+    path('metrics/', views.metrics, name='analytics_metrics'),
+    path('dashboard-summary/', views.dashboard_summary, name='dashboard_summary'),
+]

@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 
-type Role = 'admin' | 'recruteur' | 'candidat'
+type Role = 'admin' | 'recruiter' | 'candidate'
 
 interface RequireRoleProps {
   roles?: Role[]
